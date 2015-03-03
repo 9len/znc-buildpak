@@ -7,11 +7,11 @@ cd $DIR; cp -R ../files/run_znc.sh $1/run_znc.sh
 cd $DIR; cp -R ../files/ngrok $1/ngrok
 mkdir -p /app
 mkdir -p $2
-if [ -f $2/znc-1.4.tar.gz ]; then
-  echo "-----> znc is already compiled"
-  cd $2/znc-1.4; make install
-  cp -R /app/znc/ $1/
-else
+#if [ -f $2/znc-1.4.tar.gz ]; then
+#  echo "-----> znc is already compiled"
+#  cd $2/znc-1.4; make install
+#  cp -R /app/znc/ $1/
+#else
   echo "-----> downloading and compile znc"
   cd $2; curl -O http://znc.in/releases/znc-1.4.tar.gz
   cd $2; tar zxvf znc-1.4.tar.gz
@@ -20,7 +20,7 @@ else
   cd $2/znc-1.4; make install
   cp -R /app/znc/ $1/
 
-fi
+#fi
 
 echo "-----> Relocating znc config to proper folder"
 mkdir -p $1/.znc/configs

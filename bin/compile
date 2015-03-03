@@ -18,7 +18,9 @@ popd
 if [ -f $TARGET/znc/bin/znc ]; then
   echo "-----> znc already installed"
 else
-  if [ ! -f "/app/znc/bin/znc" ]; then
+  if [ -f "/app/znc/bin/znc" ]; then
+    echo "-----> znc already built"
+  else 
     mkdir -p /app
     mkdir -p $TMP
     

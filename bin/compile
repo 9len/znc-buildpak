@@ -1,36 +1,45 @@
 #!/bin/bash
 
-CURDIR=$PWD
+TARGET=$1
+TMP=$2
 DIR="$( cd "$( dirname "$0" )" && pwd )"
-echo "-----> Installing ngrok and runner"
-cd $DIR; cp -R ../files/run_znc.sh $1/run_znc.sh
-cd $DIR; cp -R ../files/ngrok $1/ngrok
-mkdir -p /app
-mkdir -p $2
-#if [ -f $2/znc-1.4.tar.gz ]; then
-#  echo "-----> znc is already compiled"
-#  cd $2/znc-1.4; make install
-#  cp -R /app/znc/ $1/
-#else
-  echo `pwd`
-  echo "-----> downloading and compile znc"
-  pushd $2
-  curl -O http://znc.in/releases/znc-1.4.tar.gz
-  tar zxvf znc-1.4.tar.gz
-  popd
-  pushd $2/znc-1.4 
-  ./configure --prefix="/app/znc"
-  make
-  make install
-  popd
-  cp -R /app/znc/ $1/
 
-#fi
+ZNC_VERSION="1.6.0"
+ZNC="znc-$ZNC_VERSION"
+ZNC_GZ="$ZNC.tar.gz"
+ZNC_URL="http://znc.in/releases/$ZNC_GZ"
+
+echo "-----> Installing ngrok and runner"
+pushd $DIR
+  cp -R ../files/run_znc.sh $TARGET/run_znc.sh
+  cp -R ../files/ngrok $TARGET/ngrok
+popd
+
+mkdir -p /app
+mkdir -p $TMP
+
+echo `pwd`
+echo "-----> downloading and compile znc"
+  
+pushd $TMP
+  curl -O $ZNC_URL
+  tar zxvf $ZNC_GZ
+  
+  pushd $ZNC
+    ./configure --prefix="/app/znc"
+    make
+    make install
+  popd
+popd
+
+cp -R /app/znc/ $TARGET/
 
 echo "-----> Relocating znc config to proper folder"
-mkdir -p $1/.znc/configs
-cp $1/znc.conf $1/.znc/configs/znc.conf
-rm $1/znc.conf
+mkdir -p $TARGET/.znc/configs
+cp $TARGET/znc.conf $TARGET/.znc/configs/znc.conf
+rm $TARGET/znc.conf
+
 echo "-----> Setting up Procfile"
-cd $DIR; cp ../Procfile $1/Procfile
-cd $CURDIR
+pushd $DIR 
+  cp ../Procfile $TARGET/Procfile
+popd

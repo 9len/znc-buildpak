@@ -18,9 +18,7 @@ popd
 mkdir -p /app
 mkdir -p $TMP
 
-echo `pwd`
 echo "-----> downloading and compile znc"
-  
 pushd $TMP
   curl -O $ZNC_URL
   tar zxvf $ZNC_GZ

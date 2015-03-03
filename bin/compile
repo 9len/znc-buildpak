@@ -15,22 +15,36 @@ pushd $DIR
   cp -R ../files/ngrok $TARGET/ngrok
 popd
 
-mkdir -p /app
-mkdir -p $TMP
-
-echo "-----> downloading and compile znc"
-pushd $TMP
-  curl -O $ZNC_URL
-  tar zxvf $ZNC_GZ
+if [ -f $TARGET/znc/bin/znc ]; then
+  echo "-----> znc already installed"
+else
+  if [ ! -f "/app/znc/bin/znc" ]; then
+    mkdir -p /app
+    mkdir -p $TMP
+    
+    echo "-----> downloading and compile znc"
+    pushd $TMP
+      curl -O $ZNC_URL
+      tar zxvf $ZNC_GZ
   
-  pushd $ZNC
-    ./configure --prefix="/app/znc"
-    make
-    make install
-  popd
-popd
-
-cp -R /app/znc/ $TARGET/
+      pushd $ZNC
+        if [ ! -f "Makefile" ]; then
+          echo "-----> configuring Makefile"
+          ./configure --prefix="/app/znc"
+        fi
+        if [ ! -f "znc" ]; then
+          echo "-----> building znc"
+         make
+        fi
+        echo "-----> installing znc"
+        make install
+      popd
+    popd
+  fi
+  
+  echo "-----> copying znc to target"
+  cp -R /app/znc/ $TARGET/
+fi
 
 echo "-----> Relocating znc config to proper folder"
 mkdir -p $TARGET/.znc/configs

@@ -24,6 +24,9 @@ else
     
     echo "-----> downloading and compile znc"
     pushd $TMP
+      # why always get the file? if it's a 404, it leaves
+      # a bad file, and relative to other things here, 
+      # re-downloading the file is pretty cheap.
       curl -O $ZNC_URL
       tar zxvf $ZNC_GZ
   

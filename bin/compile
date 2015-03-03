@@ -18,28 +18,31 @@ popd
 if [ -f $TARGET/znc/bin/znc ]; then
   echo "-----> znc already installed"
 else
-  if [ -f "/app/znc/bin/znc" ]; then
-    echo "-----> znc already built"
-  else 
+  if [ ! -f "/app/znc/bin/znc" ]; then
     mkdir -p /app
     mkdir -p $TMP
     
-    echo "-----> downloading and compile znc"
     pushd $TMP
-      # why always get the file? if it's a 404, it leaves
-      # a bad file, and relative to other things here, 
-      # re-downloading the file is pretty cheap.
-      curl -O $ZNC_URL
-      tar zxvf $ZNC_GZ
+      if [ ! -f $ZNC/Makefile.in ]; then
+        echo "-----> downloading znc"
+        curl -O $ZNC_URL
+        tar zxvf $ZNC_GZ
+      else
+        echo "-----> znc already downloaded"
+      fi
   
       pushd $ZNC
         if [ ! -f "Makefile" ]; then
           echo "-----> configuring Makefile"
           ./configure --prefix="/app/znc"
+        else
+          echo "-----> Makefile already configured"
         fi
         if [ ! -f "znc" ]; then
-          echo "-----> building znc"
+          echo "-----> compiling znc"
          make
+        else
+          echo "-----> znc already compiled"
         fi
         echo "-----> installing znc"
         make install

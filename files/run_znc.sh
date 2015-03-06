@@ -9,7 +9,7 @@ echo "waiting for znc ($ZNCPID) or ngrok ($NGROKPID) to exit......."
 i=0
 while [ -e /proc/$ZNCPID -a -e /proc/$NGROKPID ]
 do
-    if (( i % 60 == 0 )); then
+    if (( $i % 60 == 0 )); then
         echo "znc ($ZNCPID) is running"
         echo "ngrok ($NGROKPID) is running"
     fi

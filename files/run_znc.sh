@@ -6,7 +6,7 @@ export NGROKPID=$!
 
 echo "waiting for znc ($ZNCPID) or ngrok ($NGROKPID) to exit......."
 
-while [ -e /proc/$ZNCPID -a -e /proc/$NGROKPID]
+while [ -e /proc/$ZNCPID -a -e /proc/$NGROKPID ]
 do
     echo "znc ($ZNCPID) is running"
     echo "ngrok ($NGROKPID) is running"
